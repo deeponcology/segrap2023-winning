@@ -25,8 +25,8 @@ UPLOAD_FOLDER = "./input"
 # os.path.join(path, 'uploads')
 
 # Make directory if uploads is not exists
-# if not os.path.isdir(UPLOAD_FOLDER):
-#     os.mkdir(UPLOAD_FOLDER)
+if not os.path.isdir(UPLOAD_FOLDER):
+    os.mkdir(UPLOAD_FOLDER)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
