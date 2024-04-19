@@ -2,20 +2,20 @@ FROM nvcr.io/nvidia/pytorch:22.04-py3
 
 RUN apt-get update -y
 RUN apt-get install unzip
-WORKDIR /opt
+WORKDIR /home
 
-RUN mkdir SegRap23
-RUN mkdir -p /opt/nnUNet_trained_models/nnUNet/3d_fullres
-RUN mkdir -p /opt/TOTALSEG/nnUNet/3d_fullres
-RUN mkdir /opt/app/
+RUN mkdir /home/SegRap23
+RUN mkdir -p /home/nnUNet_trained_models/nnUNet/3d_fullres
+RUN mkdir -p /home/TOTALSEG/nnUNet/3d_fullres
+RUN mkdir /home/app/
 
-RUN chmod -R 777 SegRap23
-RUN chmod -R 777 /opt/nnUNet_trained_models/nnUNet/3d_fullres
-RUN chmod -R 777 /opt/TOTALSEG
-RUN chmod -R 777 /opt/app
+# RUN chmod -R 777 /home/SegRap23
+# RUN chmod -R 777 /home/nnUNet_trained_models/nnUNet/3d_fullres
+# RUN chmod -R 777 /home/TOTALSEG
+# RUN chmod -R 777 /home/app
 
 # Totalseg stuff
-ENV TOTALSEG_WEIGHTS_PATH=/opt/TOTALSEG/
+ENV TOTALSEG_WEIGHTS_PATH=/home/TOTALSEG/
 
 ## Clone and Install totalsegmentor(and nnUNet v1)
 RUN pip install TotalSegmentator
@@ -23,25 +23,27 @@ RUN pip install TotalSegmentator
 RUN adduser user
 USER user
 
-
-WORKDIR /opt/SegRap23
-RUN cd /opt/SegRap23
+RUN mkdir /home/SegRap23
+RUN mkdir /home/SegRap23/templates
+WORKDIR /home/SegRap23
+RUN cd /home/SegRap23
 ## Copy SegRap Code
-COPY requirements.txt /opt/SegRap23/
-COPY weight_dl.py /opt/SegRap23/
-COPY main.py /opt/SegRap23/
-COPY App.py /opt/SegRap23/
-COPY tools /opt/SegRap23/tools/
+COPY templates/*.html /home/templates/
+COPY requirements.txt /home/SegRap23/SegRap23/
+COPY weight_dl.py /home/SegRap23/
+COPY main.py /home/SegRap23/
+COPY App.py /home/SegRap23/
+COPY tools /home/SegRap23/tools/
 ## Install requirements
 RUN pip install -r requirements.txt
 
-## Download Trained Model and store it in /opt/nnUNet_trained_models/nnUNet/3d_fullres
+## Download Trained Model and store it in /home/nnUNet_trained_models/nnUNet/3d_fullres
 RUN python weight_dl.py
-RUN unzip /opt/app/Task606_SegRap1 -d /opt/nnUNet_trained_models/nnUNet/3d_fullres
-RUN unzip /opt/app/Task269_Body_extrem_6mm_1200subj -d /opt/TOTALSEG/nnUNet/3d_fullres
-ENV RESULTS_FOLDER=/opt/nnUNet_trained_models
+RUN unzip /home/app/Task606_SegRap1 -d /home/nnUNet_trained_models/nnUNet/3d_fullres
+RUN unzip /home/app/Task269_Body_extrem_6mm_1200subj -d /home/TOTALSEG/nnUNet/3d_fullres
+ENV RESULTS_FOLDER=/home/nnUNet_trained_models
 
-RUN cd /opt/SegRap23
+RUN cd /home/SegRap23
 # CMD ["python","main.py", "-i", "/input","-o","/output"]
 ENV FLASK_APP=App.py
 # RUN  /home/pipeline.sh 
