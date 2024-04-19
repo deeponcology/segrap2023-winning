@@ -30,7 +30,7 @@ WORKDIR /opt/SegRap23
 COPY requirements.txt .
 COPY weight_dl.py .
 COPY main.py .
-COPY APP.PY .
+COPY App.py .
 COPY tools tools/
 ## Install requirements
 RUN pip install -r requirements.txt
