@@ -65,7 +65,7 @@ def predict():
         for file in files:
             filename = secure_filename(file.filename)
             print(filename)
-            file.save(main_path_in.name +"/" +filename)
+            file.save(main_path_in +"/" +filename)
             
             # nnUNet_predict -i $inputDir -o $outDir --task_name $1 --model 2d --disable_tta
         # 
@@ -78,12 +78,12 @@ def predict():
         # nnunet_out = os.path.join(save_path_out.name, 'seg_cropped_int')
         # fullsize_seg_path = os.path.join(save_path_out.name ,'seg_fullres_int')
             
-        body_mask_path = main_path_in.name+ '/cropped_in'
-        crop_log_path = main_path_in.name+  '/crop_log'
-        fullres_in = main_path_in.name + '/model_in'
-        nnunet_in = main_path_in.name + '/nnunet_in'
-        nnunet_out = save_path_out.name + '/seg_cropped_int'
-        fullsize_seg_path = save_path_out.name + '/seg_fullres_int'
+        body_mask_path = main_path_in+ '/cropped_in'
+        crop_log_path = main_path_in+  '/crop_log'
+        fullres_in = main_path_in + '/model_in'
+        nnunet_in = main_path_in + '/nnunet_in'
+        nnunet_out = save_path_out + '/seg_cropped_int'
+        fullsize_seg_path = save_path_out + '/seg_fullres_int'
         
         main_prepare(main_path_in.name, save_path_out)
         
