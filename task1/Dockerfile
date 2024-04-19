@@ -41,7 +41,7 @@ RUN unzip /opt/app/Task606_SegRap1 -d /opt/nnUNet_trained_models/nnUNet/3d_fullr
 RUN unzip /opt/app/Task269_Body_extrem_6mm_1200subj -d /opt/TOTALSEG/nnUNet/3d_fullres
 ENV RESULTS_FOLDER=/opt/nnUNet_trained_models
 
-
+RUN cd /opt/SegRap23
 # CMD ["python","main.py", "-i", "/input","-o","/output"]
 ENV FLASK_APP=App.py
 # RUN  /home/pipeline.sh 
