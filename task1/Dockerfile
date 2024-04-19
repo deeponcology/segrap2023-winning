@@ -30,6 +30,7 @@ WORKDIR /opt/SegRap23
 COPY requirements.txt .
 COPY weight_dl.py .
 COPY main.py .
+COPY APP.PY .
 COPY tools tools/
 ## Install requirements
 RUN pip install -r requirements.txt
@@ -41,4 +42,7 @@ RUN unzip /opt/app/Task269_Body_extrem_6mm_1200subj -d /opt/TOTALSEG/nnUNet/3d_f
 ENV RESULTS_FOLDER=/opt/nnUNet_trained_models
 
 
-CMD ["python","main.py", "-i", "/input","-o","/output"]
+# CMD ["python","main.py", "-i", "/input","-o","/output"]
+ENV FLASK_APP=App.py
+# RUN  /home/pipeline.sh 
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
