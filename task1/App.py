@@ -44,13 +44,15 @@ def allowed_file(filename):
 def home(path):
   return render_template(path)
 
-@app.route('/predict/<path:path>', methods=['POST'])
-def predict(path):
+@app.route('/predict', methods=['POST'])
+def predict():
     main_path_in = tempfile.TemporaryDirectory(dir="./input")
+    print("create main_path_in folder")
     save_path_out = tempfile.TemporaryDirectory(dir="./input")
+    print("create save_path_out folder")
     main_path_in = os.path.join(main_path_in, 'images')
     save_path_out = os.path.join(save_path_out, 'images')
-    print("inside ---",path)
+    # print("inside ---",path)
     
     # os.mkdir(app.config['UPLOAD_FOLDER'])
     if request.method == 'POST':
