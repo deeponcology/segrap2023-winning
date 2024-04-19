@@ -25,7 +25,7 @@ USER user
 
 
 WORKDIR /opt/SegRap23
-
+RUN cd /opt/SegRap23
 ## Copy SegRap Code
 COPY requirements.txt .
 COPY weight_dl.py .
