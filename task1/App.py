@@ -71,14 +71,21 @@ def predict():
         # 
             # subprocess.check_output("/home/predict.sh", shell=True)
             
-        body_mask_path = os.path.join(main_path_in.name, 'cropped_in')
-        crop_log_path = os.path.join(main_path_in.name, 'crop_log')
-        fullres_in = os.path.join(main_path_in.name, 'model_in')
-        nnunet_in = os.path.join(main_path_in.name, 'nnunet_in')
-        nnunet_out = os.path.join(save_path_out.name, 'seg_cropped_int')
-        fullsize_seg_path = os.path.join(save_path_out.name ,'seg_fullres_int')
+        # body_mask_path = os.path.join(main_path_in.name, 'cropped_in')
+        # crop_log_path = os.path.join(main_path_in.name, 'crop_log')
+        # fullres_in = os.path.join(main_path_in.name, 'model_in')
+        # nnunet_in = os.path.join(main_path_in.name, 'nnunet_in')
+        # nnunet_out = os.path.join(save_path_out.name, 'seg_cropped_int')
+        # fullsize_seg_path = os.path.join(save_path_out.name ,'seg_fullres_int')
+            
+        body_mask_path = main_path_in.name+ '/cropped_in'
+        crop_log_path = main_path_in.name+  '/crop_log'
+        fullres_in = main_path_in.name + '/model_in'
+        nnunet_in = main_path_in.name + '/nnunet_in'
+        nnunet_out = save_path_out.name + '/seg_cropped_int'
+        fullsize_seg_path = save_path_out.name + '/seg_fullres_int'
         
-        main_prepare(main_path_in, save_path_out)
+        main_prepare(main_path_in.name, save_path_out)
         
         print('\n'*5)
         print(' Extracting body mask begins ...')
