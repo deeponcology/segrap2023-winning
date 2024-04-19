@@ -49,5 +49,5 @@ RUN cd /home/SegRap23
 # CMD ["python","main.py", "-i", "/input","-o","/output"]
 ENV FLASK_APP=App.py
 # RUN  /home/pipeline.sh 
-# CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
-CMD ["python","main.py", "-i", "/input","-o","/output"]
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+# CMD ["python","main.py", "-i", "/input","-o","/output"]

@@ -47,7 +47,7 @@ def home(path):
 @app.route('/predict/<path:path>', methods=['POST'])
 def predict(path):
     main_path_in = tempfile.TemporaryDirectory(dir="./input")
-    save_path_out = tempfile.TemporaryDirectory(dir="./output")
+    save_path_out = tempfile.TemporaryDirectory(dir="./input")
     main_path_in = os.path.join(main_path_in, 'images')
     save_path_out = os.path.join(save_path_out, 'images')
     print("inside ---",path)
