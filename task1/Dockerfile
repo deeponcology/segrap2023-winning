@@ -27,11 +27,11 @@ USER user
 WORKDIR /opt/SegRap23
 RUN cd /opt/SegRap23
 ## Copy SegRap Code
-COPY requirements.txt .
-COPY weight_dl.py .
-COPY main.py .
-COPY App.py .
-COPY tools tools/
+COPY requirements.txt /opt/SegRap23/
+COPY weight_dl.py /opt/SegRap23/
+COPY main.py /opt/SegRap23/
+COPY App.py /opt/SegRap23/
+COPY tools /opt/SegRap23/tools/
 ## Install requirements
 RUN pip install -r requirements.txt
 
