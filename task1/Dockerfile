@@ -4,10 +4,11 @@ RUN apt-get update -y
 RUN apt-get install unzip
 WORKDIR /home
 
-RUN mkdir /home/SegRap23
+RUN mkdir -p /home/SegRap23
 RUN mkdir -p /home/nnUNet_trained_models/nnUNet/3d_fullres
 RUN mkdir -p /home/TOTALSEG/nnUNet/3d_fullres
-RUN mkdir /home/app/
+RUN mkdir -p /home/app
+RUN mkdir -p /home/SegRap23/templates
 
 # RUN chmod -R 777 /home/SegRap23
 # RUN chmod -R 777 /home/nnUNet_trained_models/nnUNet/3d_fullres
@@ -23,13 +24,13 @@ RUN pip install TotalSegmentator
 RUN adduser user
 USER user
 
-RUN mkdir /home/SegRap23
-RUN mkdir /home/SegRap23/templates
+
+
 WORKDIR /home/SegRap23
 RUN cd /home/SegRap23
 ## Copy SegRap Code
-COPY templates/*.html /home/templates/
-COPY requirements.txt /home/SegRap23/SegRap23/
+COPY templates/*.html /home/SegRap23/templates/
+COPY requirements.txt /home/SegRap23/
 COPY weight_dl.py /home/SegRap23/
 COPY main.py /home/SegRap23/
 COPY App.py /home/SegRap23/
