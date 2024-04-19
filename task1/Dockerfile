@@ -39,6 +39,7 @@ COPY tools /home/SegRap23/tools/
 RUN pip install -r requirements.txt
 
 ## Download Trained Model and store it in /home/nnUNet_trained_models/nnUNet/3d_fullres
+RUN cd /home/SegRap23
 RUN python weight_dl.py
 RUN unzip /home/app/Task606_SegRap1 -d /home/nnUNet_trained_models/nnUNet/3d_fullres
 RUN unzip /home/app/Task269_Body_extrem_6mm_1200subj -d /home/TOTALSEG/nnUNet/3d_fullres
