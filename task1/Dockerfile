@@ -10,10 +10,10 @@ RUN mkdir -p /home/TOTALSEG/nnUNet/3d_fullres
 RUN mkdir -p /home/app
 RUN mkdir -p /home/SegRap23/templates
 
-# RUN chmod -R 777 /home/SegRap23
-# RUN chmod -R 777 /home/nnUNet_trained_models/nnUNet/3d_fullres
-# RUN chmod -R 777 /home/TOTALSEG
-# RUN chmod -R 777 /home/app
+RUN chmod -R 777 /home/SegRap23
+RUN chmod -R 777 /home/nnUNet_trained_models/nnUNet/3d_fullres
+RUN chmod -R 777 /home/TOTALSEG
+RUN chmod -R 777 /home/app
 
 # Totalseg stuff
 ENV TOTALSEG_WEIGHTS_PATH=/home/TOTALSEG/
