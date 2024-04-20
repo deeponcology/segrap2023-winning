@@ -63,7 +63,7 @@ def process_data():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(nnunet_in, filename))
-        return "File uploaded successfully."
+        
     else:
         return "Invalid file or file extension not allowed."
     main_prepare(main_path_in, save_path_out)
