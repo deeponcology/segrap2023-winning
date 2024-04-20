@@ -62,7 +62,11 @@ def process_data():
     nnunet_in = os.path.join(main_path_in, 'nnunet_in')
     nnunet_out = os.path.join(save_path_out, 'seg_cropped_int')
     fullsize_seg_path = os.path.join(save_path_out ,'seg_fullres_int')
+    print('\n'*5)
+    print("before main_prepare")
     main_prepare(main_path_in, save_path_out)
+    print('\n'*5)
+    print("After main_prepare")
     file = request.files['file']
     try:
         if file and allowed_file(file.filename):
