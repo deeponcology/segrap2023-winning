@@ -1,21 +1,56 @@
 import os
 import argparse
+from flask import Flask, flash, request, redirect, render_template,jsonify, send_file
+from werkzeug.utils import secure_filename
+from flask_cors import CORS
+
 from tools.prepare_data import main_prepare
 from tools.label_reformulate import main_reformat
 from tools.cropping_stuff import get_body_mask, get_bounding_box, get_cropped_volumes, crop_to_fullres
+import tempfile
+import shutil
 
-parser = argparse.ArgumentParser(description='SegRap2023 Challenge_taks1')
-parser.add_argument('-i', type=str, help='main path to data with two subdirs standing for two modalities', required=True)
-parser.add_argument('-o', type=str, help='main path to save masks', required=True)
-args = parser.parse_args()
+app=Flask(__name__)
+CORS(app)
 
-main_path_in = args.i
-save_path_out = args.o
-main_path_in = os.path.join(main_path_in, 'images')
-save_path_out = os.path.join(save_path_out, 'images')
+app.secret_key = "secret key"
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 * 1024 * 1024
+
+# Get current path
+path = os.getcwd()
+# file Upload
+UPLOAD_FOLDER = "./input"
+# os.path.join(path, 'uploads')
+
+# Make directory if uploads is not exists
+if not os.path.isdir(UPLOAD_FOLDER):
+    os.mkdir(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Allowed extension you can set your own
+ALLOWED_EXTENSIONS = set(['dcm', 'nii.gz', 'dicom', 'jpg', 'jpeg', 'gif'])
 
 
-def main():
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
+
+@app.route('/<path:path>')
+def home(path):
+  return render_template(path)
+
+
+@app.route('/predict', methods=['POST'])
+def process_data():
+    
+    base_directory = './input'
+    temp_directory = tempfile.mkdtemp(dir=base_directory)
+    
+    main_path_in = os.path.join(temp_directory, 'main_path_in')
+    save_path_out = os.path.join(temp_directory, 'save_path_out')
     
     body_mask_path = os.path.join(main_path_in, 'cropped_in')
     crop_log_path = os.path.join(main_path_in, 'crop_log')
@@ -24,41 +59,33 @@ def main():
     nnunet_out = os.path.join(save_path_out, 'seg_cropped_int')
     fullsize_seg_path = os.path.join(save_path_out ,'seg_fullres_int')
     
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(nnunet_in, filename))
+        return "File uploaded successfully."
+    else:
+        return "Invalid file or file extension not allowed."
     main_prepare(main_path_in, save_path_out)
     
-    print('\n'*5)
-    print(' Extracting body mask begins ...')
-    print('\n'*5)    
     get_body_mask(fullres_in, body_mask_path)
     
-    print('\n'*5)
-    print('Calculating the BBox coordinates begins ...')
-    print('\n'*5)   
     get_bounding_box(body_mask_path)
     
-    print('\n'*5)
-    print('Extracting cropped volume process begins ...')
-    print('\n'*5)    
     get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
     
-    print('\n'*5)
-    print('Segmenting the cropped volume begins ...')
-    print('\n'*5)   
     os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
     
-    print('\n'*5)
-    print('Projecting cropped mask into full resolutional masks begins ...')
-    print('\n'*5)   
-    crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)    
+    crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)
     
-    print('\n'*4)
-    print('Segmentation process finished successfully!')
-    print('\n'*4)
     main_reformat(save_path_out)
     
-    print('\n'*4)
-    print('The pipeline was executed successfully')
-    return None
+    # Return the segmented processed Nifti file
+    segmented_file = os.path.join(save_path_out, 'segmented.nii.gz')
+    shutil.move(fullsize_seg_path, segmented_file)
+    return send_file(segmented_file, mimetype="application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip")
+       
+    return segmented_file
 
 if __name__ == '__main__':
-    main()
+    app.run()

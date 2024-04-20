@@ -1,16 +1,14 @@
-from mailbox import Message
 import os
-from flask import Flask, flash, request, redirect, render_template
+import argparse
+from flask import Flask, flash, request, redirect, render_template,jsonify, send_file
 from werkzeug.utils import secure_filename
-import subprocess
-import json
-import shutil
-import tempfile
-from flask import jsonify, send_file
 from flask_cors import CORS
+
 from tools.prepare_data import main_prepare
 from tools.label_reformulate import main_reformat
 from tools.cropping_stuff import get_body_mask, get_bounding_box, get_cropped_volumes, crop_to_fullres
+import tempfile
+import shutil
 
 app=Flask(__name__)
 CORS(app)
@@ -44,85 +42,50 @@ def allowed_file(filename):
 def home(path):
   return render_template(path)
 
+
 @app.route('/predict', methods=['POST'])
-def predict():
-    main_path_in = tempfile.TemporaryDirectory(dir="./input")
-    print("create main_path_in folder")
-    save_path_out = tempfile.TemporaryDirectory(dir="./input")
-    print("create save_path_out folder")
-    main_path_in = os.path.join(main_path_in.name, 'images')
-    save_path_out = os.path.join(save_path_out.name, 'images')
-    # print("inside ---",path)
+def process_data():
     
-    # os.mkdir(app.config['UPLOAD_FOLDER'])
-    if request.method == 'POST':
-
-        
-        print("inside ---")
-        files = request.files.getlist('files[]')
+    base_directory = './input'
+    temp_directory = tempfile.mkdtemp(dir=base_directory)
+    
+    main_path_in = os.path.join(temp_directory, 'main_path_in')
+    save_path_out = os.path.join(temp_directory, 'save_path_out')
+    
+    body_mask_path = os.path.join(main_path_in, 'cropped_in')
+    crop_log_path = os.path.join(main_path_in, 'crop_log')
+    fullres_in = os.path.join(main_path_in, 'model_in')
+    nnunet_in = os.path.join(main_path_in, 'nnunet_in')
+    nnunet_out = os.path.join(save_path_out, 'seg_cropped_int')
+    fullsize_seg_path = os.path.join(save_path_out ,'seg_fullres_int')
+    
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(nnunet_in, filename))
+        return "File uploaded successfully."
+    else:
+        return "Invalid file or file extension not allowed."
+    main_prepare(main_path_in, save_path_out)
+    
+    get_body_mask(fullres_in, body_mask_path)
+    
+    get_bounding_box(body_mask_path)
+    
+    get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
+    
+    os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
+    
+    crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)
+    
+    main_reformat(save_path_out)
+    
+    # Return the segmented processed Nifti file
+    segmented_file = os.path.join(save_path_out, 'segmented.nii.gz')
+    shutil.move(fullsize_seg_path, segmented_file)
+    return send_file(segmented_file, mimetype="application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip")
        
+    return segmented_file
 
-        for file in files:
-            filename = secure_filename(file.filename)
-            print(filename)
-            file.save(main_path_in +"/" +filename)
-            
-            # nnUNet_predict -i $inputDir -o $outDir --task_name $1 --model 2d --disable_tta
-        # 
-            # subprocess.check_output("/home/predict.sh", shell=True)
-            
-        # body_mask_path = os.path.join(main_path_in.name, 'cropped_in')
-        # crop_log_path = os.path.join(main_path_in.name, 'crop_log')
-        # fullres_in = os.path.join(main_path_in.name, 'model_in')
-        # nnunet_in = os.path.join(main_path_in.name, 'nnunet_in')
-        # nnunet_out = os.path.join(save_path_out.name, 'seg_cropped_int')
-        # fullsize_seg_path = os.path.join(save_path_out.name ,'seg_fullres_int')
-            
-        body_mask_path = main_path_in+ '/cropped_in'
-        crop_log_path = main_path_in+  '/crop_log'
-        fullres_in = main_path_in + '/model_in'
-        nnunet_in = main_path_in + '/nnunet_in'
-        nnunet_out = save_path_out + '/seg_cropped_int'
-        fullsize_seg_path = save_path_out + '/seg_fullres_int'
-        
-        main_prepare(main_path_in.name, save_path_out)
-        
-        print('\n'*5)
-        print(' Extracting body mask begins ...')
-        print('\n'*5)    
-        get_body_mask(fullres_in, body_mask_path)
-        
-        print('\n'*5)
-        print('Calculating the BBox coordinates begins ...')
-        print('\n'*5)   
-        get_bounding_box(body_mask_path)
-        
-        print('\n'*5)
-        print('Extracting cropped volume process begins ...')
-        print('\n'*5)    
-        get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
-        
-        print('\n'*5)
-        print('Segmenting the cropped volume begins ...')
-        print('\n'*5)   
-        os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
-        
-        print('\n'*5)
-        print('Projecting cropped mask into full resolutional masks begins ...')
-        print('\n'*5)   
-        crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)    
-        
-        print('\n'*4)
-        print('Segmentation process finished successfully!')
-        print('\n'*4)
-        main_reformat(save_path_out)
-        
-        print('\n'*4)
-        print('The pipeline was executed successfully')
-        files = os.listdir(save_path_out.name)
-        retFile = files[0]
-        return send_file(save_path_out.name +"/"+retFile, mimetype="application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip")
-       
- 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0',port=5000,debug=False,threaded=True)
+if __name__ == '__main__':
+    app.run()
