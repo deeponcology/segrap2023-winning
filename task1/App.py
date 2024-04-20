@@ -76,7 +76,7 @@ def process_data():
         
    
     my = os.listdir(nnunet_in.name )
-    print("input dir = ",my)
+    print("input dir = ",os.path.abspath(my))
     # get_body_mask(fullres_in, body_mask_path)
     
     # get_bounding_box(body_mask_path)
