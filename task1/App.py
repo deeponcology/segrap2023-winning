@@ -28,7 +28,7 @@ if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
 
 if not os.path.isdir("./output"):
-    os.mkdir(("./output")
+    os.mkdir("./output")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Allowed extension you can set your own
