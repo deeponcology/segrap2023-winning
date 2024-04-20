@@ -67,7 +67,7 @@ def process_data():
     # # main_prepare(main_path_in, save_path_out)
     # print('\n'*5)
     # print("After main_prepare")
-    files = request.files['files[]']
+    files = request.files.getlist('files[]')
     for file in files:
             filename = secure_filename(file.filename)
             print(filename)
