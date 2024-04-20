@@ -70,10 +70,10 @@ def process_data():
             file.save(os.path.join(nnunet_in, filename))
         else:
             print("Exception occurred during saving the file..")
-            return "Invalid file or file extension not allowed."
+            
     except Exception as e:
         print("Exception occurred:", str(e))
-        return "An error occurred while processing the file."
+        
     main_prepare(main_path_in, save_path_out)
     
     get_body_mask(fullres_in, body_mask_path)
