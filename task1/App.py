@@ -60,12 +60,16 @@ def process_data():
     fullsize_seg_path = os.path.join(save_path_out ,'seg_fullres_int')
     
     file = request.files['file']
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(nnunet_in, filename))
-        
-    else:
-        return "Invalid file or file extension not allowed."
+    try:
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(nnunet_in, filename))
+        else:
+            print("Exception occurred during saving the file..")
+            return "Invalid file or file extension not allowed."
+    except Exception as e:
+        print("Exception occurred:", str(e))
+        return "An error occurred while processing the file."
     main_prepare(main_path_in, save_path_out)
     
     get_body_mask(fullres_in, body_mask_path)
