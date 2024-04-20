@@ -27,6 +27,8 @@ UPLOAD_FOLDER = "./input"
 if not os.path.isdir(UPLOAD_FOLDER):
     os.mkdir(UPLOAD_FOLDER)
 
+if not os.path.isdir("./output"):
+    os.mkdir(("./output")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Allowed extension you can set your own
@@ -53,7 +55,7 @@ def process_data():
     
     base_directory = './input'
     nnunet_in = tempfile.TemporaryDirectory(dir=base_directory)
-    nnunet_out = tempfile.TemporaryDirectory(dir=base_directory)
+    nnunet_out = tempfile.TemporaryDirectory(dir="./output")
     # main_path_in = os.path.join(temp_directory, 'main_path_in')
     # save_path_out = os.path.join(temp_directory, 'save_path_out')
     
@@ -76,10 +78,11 @@ def process_data():
         
    
     my = os.listdir(nnunet_in.name )
-    print("input dir = ",os.path.abspath(nnunet_in.name ))
+    print("input dir = ",my)
     # get_body_mask(fullres_in, body_mask_path)
     
     # get_bounding_box(body_mask_path)
+    print("going to use input directory = ",os.path.abspath(nnunet_in.name ))
     print("going to use input directory = ",nnunet_in.name)
     # get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
     subprocess.check_output(
