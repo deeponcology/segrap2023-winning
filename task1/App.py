@@ -51,28 +51,28 @@ def home(path):
 def process_data():
     
     base_directory = './input'
-    temp_directory = tempfile.mkdtemp(dir=base_directory)
+    nnunet_in = tempfile.mkdtemp(dir=base_directory)
+    nnunet_out = tempfile.mkdtemp(dir=base_directory)
+    # main_path_in = os.path.join(temp_directory, 'main_path_in')
+    # save_path_out = os.path.join(temp_directory, 'save_path_out')
     
-    main_path_in = os.path.join(temp_directory, 'main_path_in')
-    save_path_out = os.path.join(temp_directory, 'save_path_out')
-    
-    body_mask_path = os.path.join(main_path_in, 'cropped_in')
-    crop_log_path = os.path.join(main_path_in, 'crop_log')
-    fullres_in = os.path.join(main_path_in, 'model_in')
-    nnunet_in = os.path.join(main_path_in, 'nnunet_in')
-    nnunet_out = os.path.join(save_path_out, 'seg_cropped_int')
-    fullsize_seg_path = os.path.join(save_path_out ,'seg_fullres_int')
-    print('\n'*5)
-    print("before main_prepare")
-    # main_prepare(main_path_in, save_path_out)
-    print('\n'*5)
-    print("After main_prepare")
+    # body_mask_path = os.path.join(main_path_in, 'cropped_in')
+    # crop_log_path = os.path.join(main_path_in, 'crop_log')
+    # fullres_in = os.path.join(main_path_in, 'model_in')
+    # nnunet_in = os.path.join(main_path_in, 'nnunet_in')
+    # nnunet_out = os.path.join(save_path_out, 'seg_cropped_int')
+    # fullsize_seg_path = os.path.join(save_path_out ,'seg_fullres_int')
+    # print('\n'*5)
+    # print("before main_prepare")
+    # # main_prepare(main_path_in, save_path_out)
+    # print('\n'*5)
+    # print("After main_prepare")
     files = request.files['files[]']
     try:
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(nnunet_in, filename))
+                file.save(os.path.join(nnunet_in.name +"/" +filename))
             else:
                 print("Exception occurred during saving the file..")
             
@@ -87,7 +87,7 @@ def process_data():
     
     # get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
     
-    os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
+    os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in.name, nnunet_out.name))
     
     # crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)
     
