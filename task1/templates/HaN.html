@@ -1,5 +1,8 @@
-<!doctype html>
-<title>DeepMD AI Model API test page</title>
+<html>
+    <head>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    </head>
+    <body>
 <h2>Select file(s) to upload</h2>
 <p>
 	{% with messages = get_flashed_messages() %}
@@ -28,3 +31,5 @@
 	</p>
 
 </form> -->
+	</body>
+</html>

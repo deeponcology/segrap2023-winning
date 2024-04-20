@@ -1,6 +1,6 @@
 import os
 import argparse
-from flask import Flask, flash, request, redirect, render_template,jsonify, send_file
+from flask import Flask, flash, request, redirect, render_template,jsonify, send_file,send_from_directory
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 
@@ -38,6 +38,10 @@ def allowed_file(filename):
 
 
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 @app.route('/<path:path>')
 def home(path):
   return render_template(path)
