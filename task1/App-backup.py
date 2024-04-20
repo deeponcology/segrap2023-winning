@@ -64,7 +64,7 @@ def process_data():
     fullsize_seg_path = os.path.join(save_path_out ,'seg_fullres_int')
     print('\n'*5)
     print("before main_prepare")
-    # main_prepare(main_path_in, save_path_out)
+    main_prepare(main_path_in, save_path_out)
     print('\n'*5)
     print("After main_prepare")
     file = request.files['file']
@@ -80,11 +80,11 @@ def process_data():
         
    
     
-    # get_body_mask(fullres_in, body_mask_path)
+    get_body_mask(fullres_in, body_mask_path)
     
-    # get_bounding_box(body_mask_path)
+    get_bounding_box(body_mask_path)
     
-    # get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
+    get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
     
     os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
     

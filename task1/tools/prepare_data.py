@@ -25,9 +25,10 @@ def main_prepare(main_in, main_out):
     print("before create_path(model_out3)")
     create_path(model_out3)
     print('\n'*5)
-    print("before main_prepare")
+    print("After create_path(model_out3)")
        
     ct_files = path_contents_pattern(main_ct_in, '.nii.gz')
+    print("After path_contents_pattern(main_ct_in, '.nii.gz')")
     ct_enh_files = path_contents_pattern(main_ct_enh_in, '.nii.gz')
     
     n_subject = len(ct_enh_files)
