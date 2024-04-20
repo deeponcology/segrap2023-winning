@@ -88,16 +88,20 @@ def process_data():
     
     os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
     
-    crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)
+    # crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)
     
-    main_reformat(save_path_out)
+    # main_reformat(save_path_out)
     
-    # Return the segmented processed Nifti file
-    segmented_file = os.path.join(save_path_out, 'segmented.nii.gz')
-    shutil.move(fullsize_seg_path, segmented_file)
-    return send_file(segmented_file, mimetype="application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip")
+    # # Return the segmented processed Nifti file
+    # segmented_file = os.path.join(save_path_out, 'segmented.nii.gz')
+    # shutil.move(fullsize_seg_path, segmented_file)
+    # return send_file(segmented_file, mimetype="application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip")
        
-    return segmented_file
+    # return segmented_file
+    files = os.listdir(nnunet_out.name)
+    retFile = files[0]
+    return send_file(nnunet_out.name +"/"+retFile, mimetype="application/zip, application/octet-stream, application/x-zip-compressed, multipart/x-zip")
+       
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000,debug=True,threaded=True)
