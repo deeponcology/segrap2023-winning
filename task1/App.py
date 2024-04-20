@@ -72,7 +72,8 @@ def process_data():
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(nnunet_in.name +"/" +filename))
+                file.save(nnunet_in.name +"/" +filename)
+                print("Saved file to :: ",nnunet_in.name +"/" +filename)
             else:
                 print("Exception occurred during saving the file..")
             
