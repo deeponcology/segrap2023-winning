@@ -1,5 +1,6 @@
 import os
 import argparse
+import subprocess
 from flask import Flask, flash, request, redirect, render_template,jsonify, send_file,send_from_directory
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
@@ -80,8 +81,18 @@ def process_data():
     # get_bounding_box(body_mask_path)
     
     # get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
-    
-    os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
+    subprocess.check_output(
+                [
+                "nnUNet_predict", 
+                "-i", nnunet_in.name,
+                "-o", nnunet_out.name,
+                "-t", "606",
+                "-tr","nnUNetTrainerV2_noMirroring",
+                "-f","all"
+                "-m", "3d_fullres",
+                "--disable_tta"]
+                )
+    # os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
     
     # crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)
     
