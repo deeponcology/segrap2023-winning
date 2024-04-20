@@ -27,8 +27,8 @@ def main_prepare(main_in, main_out):
     print('\n'*5)
     print("before main_prepare")
        
-    ct_files = path_contents_pattern(main_ct_in, '.mha')
-    ct_enh_files = path_contents_pattern(main_ct_enh_in, '.mha')
+    ct_files = path_contents_pattern(main_ct_in, '.nii.gz')
+    ct_enh_files = path_contents_pattern(main_ct_enh_in, '.nii.gz')
     
     n_subject = len(ct_enh_files)
     
@@ -39,7 +39,7 @@ def main_prepare(main_in, main_out):
         ct_subject = ct_files[ixx]
         ct_enh_subject = ct_enh_files[ixx]
         
-        subject_name = ct_subject.split('.mha')[0]
+        subject_name = ct_subject.split('.nii.gz')[0]
         
         ch1_name = subject_name+'_0000.nii.gz'
         ch2_name = subject_name+'_0001.nii.gz'
