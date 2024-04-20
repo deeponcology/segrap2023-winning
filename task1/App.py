@@ -80,7 +80,7 @@ def process_data():
     # get_body_mask(fullres_in, body_mask_path)
     
     # get_bounding_box(body_mask_path)
-    
+    print("going to use input directory = ",nnunet_in.name)
     # get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
     subprocess.check_output(
                 [
