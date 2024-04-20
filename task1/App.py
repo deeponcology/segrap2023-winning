@@ -51,8 +51,8 @@ def home(path):
 def process_data():
     
     base_directory = './input'
-    nnunet_in = tempfile.mkdtemp(dir=base_directory)
-    nnunet_out = tempfile.mkdtemp(dir=base_directory)
+    nnunet_in = tempfile.TemporaryDirectory(dir=base_directory)
+    nnunet_out = tempfile.TemporaryDirectory(dir=base_directory)
     # main_path_in = os.path.join(temp_directory, 'main_path_in')
     # save_path_out = os.path.join(temp_directory, 'save_path_out')
     
