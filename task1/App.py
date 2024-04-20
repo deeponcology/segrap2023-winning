@@ -62,7 +62,7 @@ def process_data():
     nnunet_in = os.path.join(main_path_in, 'nnunet_in')
     nnunet_out = os.path.join(save_path_out, 'seg_cropped_int')
     fullsize_seg_path = os.path.join(save_path_out ,'seg_fullres_int')
-    
+     main_prepare(main_path_in, save_path_out)
     file = request.files['file']
     try:
         if file and allowed_file(file.filename):
@@ -74,7 +74,7 @@ def process_data():
     except Exception as e:
         print("Exception occurred:", str(e))
         
-    main_prepare(main_path_in, save_path_out)
+   
     
     get_body_mask(fullres_in, body_mask_path)
     
