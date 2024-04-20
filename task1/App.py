@@ -88,7 +88,7 @@ def process_data():
                 "-o", nnunet_out.name,
                 "-t", "606",
                 "-tr","nnUNetTrainerV2_noMirroring",
-                "-f","all"
+                "-f","all",
                 "-m", "3d_fullres",
                 "--disable_tta"]
                 )
