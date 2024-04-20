@@ -87,7 +87,7 @@ def process_data():
     
     # get_cropped_volumes(fullres_in, body_mask_path, nnunet_in, crop_log_path)
     
-    os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in.name, nnunet_out.name))
+    os.system('nnUNet_predict -i %s -o %s -t 606 -m 3d_fullres -tr nnUNetTrainerV2_noMirroring -f=all --disable_tta  --mode fast' % (nnunet_in, nnunet_out))
     
     # crop_to_fullres(save_path_out, crop_log_path, fullsize_seg_path)
     
