@@ -68,17 +68,10 @@ def process_data():
     # print('\n'*5)
     # print("After main_prepare")
     files = request.files['files[]']
-    try:
-        for file in files:
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(nnunet_in.name +"/" +filename)
-                print("Saved file to :: ",nnunet_in.name +"/" +filename)
-            else:
-                print("Exception occurred during saving the file..")
-            
-    except Exception as e:
-        print("Exception occurred:", str(e))
+    for file in files:
+            filename = secure_filename(file.filename)
+            print(filename)
+            file.save(nnunet_in.name +"/" +filename)
         
    
     
