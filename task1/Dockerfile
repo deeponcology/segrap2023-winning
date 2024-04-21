@@ -21,10 +21,6 @@ ENV TOTALSEG_WEIGHTS_PATH=/home/TOTALSEG/
 ## Clone and Install totalsegmentor(and nnUNet v1)
 RUN pip install TotalSegmentator
 
-RUN adduser user
-USER user
-
-
 
 WORKDIR /home/SegRap23
 RUN cd /home/SegRap23
