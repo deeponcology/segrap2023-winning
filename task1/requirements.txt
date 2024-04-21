@@ -1,4 +1,4 @@
 gdown
 flask
 flask_cors
-TotalSegmentator
+TotalSegmentator==1.5.7
